@@ -6,13 +6,11 @@
 
 (defn saveOrEditNote
   [id]
-  (def tmpID (if (empty? id) (generate-key) id))
-  (def tmpCaption (if (empty? (@state/tmpNote :caption)) "Title - Blank" (@state/tmpNote :caption)))
-  (def tmpText (if (empty? (@state/tmpNote :text)) "Text - Blank" (@state/tmpNote :text)))
-
-  (swap! state/notes assoc tmpID {:id tmpID :caption tmpCaption :text tmpText})
-  (fn [] (reset! state/tmpNote {}))
-)
+  (let [tmpID (if (empty? (str id)) (generate-key) id)
+        tmpCaption (if (empty? (@state/tmpNote :caption)) "Title - Blank" (@state/tmpNote :caption))
+        tmpText (if (empty? (@state/tmpNote :text)) "Text - Blank" (@state/tmpNote :text))]
+    (swap! state/notes assoc tmpID {:id tmpID :caption tmpCaption :text tmpText})
+    (reset! state/tmpNote {})))
 
 (defn notes
   []
