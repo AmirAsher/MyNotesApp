@@ -4,26 +4,27 @@
               [reagent.core :as r]))
 
 
-(defn saveOrEditNote
+(defn save-or-edit-note
   [id]
-  (def tmpID (if (empty? id) (generate-key) id))
-  (def tmpCaption (if (empty? (@state/tmpNote :caption)) "Title - Blank" (@state/tmpNote :caption)))
-  (def tmpText (if (empty? (@state/tmpNote :text)) "Text - Blank" (@state/tmpNote :text)))
+  (let[
+  tmpID (if (empty? id) (generate-key) id)
+  tmpCaption (if (empty? (@state/tmpNote :caption)) "Title - Blank" (@state/tmpNote :caption))
+  tmpText (if (empty? (@state/tmpNote :text)) "Text - Blank" (@state/tmpNote :text))]
 
   (swap! state/notes assoc tmpID {:id tmpID :caption tmpCaption :text tmpText})
-  (fn [] (reset! state/tmpNote {}))
+  (reset! state/tmpNote {}))
 )
 
 (defn notes
   []
-  (let [ deleteNote #(swap! state/notes dissoc %) ]
+  (let [ delete-note #(swap! state/notes dissoc %) ]
     (fn
       []
       [:main
        [:div.notes
            [:div.btn.btn--primary.float--left.tooltip.far.fa-save
            {:data-tooltip "Save the new note"
-              :on-click (fn [] (saveOrEditNote nil))}
+              :on-click (fn [] (save-or-edit-note nil))}
            ]
 
         (for [{:keys [id caption text]} (vals @state/notes)]
@@ -33,12 +34,12 @@
 
               [:div.btn.btn--primary.float--right.tooltip.far.fa-trash-alt
                 {:data-tooltip "Delete"
-                :on-click #(deleteNote id)}
+                :on-click #(delete-note id)}
               ]
 
               [:div.btn.btn--primary.float--right.tooltip.fa.fa-edit
                 {:data-tooltip "Edit"
-                :on-click (fn [] (saveOrEditNote id))}]
+                :on-click (fn [] (save-or-edit-note id))}]
               caption]
             [:p.note__desc text]]])
         ]
