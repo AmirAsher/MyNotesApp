@@ -7,8 +7,6 @@
                             :text "a sample note text (the sample note can't be edited)"}}))
 
 
-
-
-(def tmpNote (r/atom {:nil {:id :nil
-                            :caption ""
-                            :text "" }}))
+(def tmp-id (r/atom ""))
+(def tmp-caption (r/atom ""))
+(def tmp-text (r/atom ""))
